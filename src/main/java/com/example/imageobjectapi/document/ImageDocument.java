@@ -1,7 +1,6 @@
 package com.example.imageobjectapi.document;
 
 import lombok.*;
-import lombok.extern.jackson.Jacksonized;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
