@@ -4,43 +4,45 @@ import com.example.imageobjectapi.document.ImageDocument;
 import com.example.imageobjectapi.dto.request.ImageProcessRequest;
 import com.example.imageobjectapi.service.googleVision.VisionService;
 import com.example.imageobjectapi.service.image.ImageService;
-import com.google.cloud.vision.v1.AnnotateImageResponse;
-import com.google.cloud.vision.v1.LocalizedObjectAnnotation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ImageController {
     private final ImageService imageService;
     private final VisionService visionService;
 
     @GetMapping(path = {"/images"})
-    public Flux<ImageDocument> getImages(@RequestParam(value ="object", required = false) Optional<String> objects){
-        if(objects.isPresent()){
-            return this.imageService.getAllImagesWithObjects(objects.get());
-        }else {
+    public List<ImageDocument> getImages(@RequestParam(value ="object", required = false) List<String> objects){
+        if(objects.isEmpty()){
             return this.imageService.getAllImages();
+        }else {
+            return this.imageService.getAllImagesWithObjects(objects);
         }
     }
 
     @GetMapping(path = {"/images/{id}"})
-    public Mono<ResponseEntity<ImageDocument>> getImageById(@PathVariable String id){
+    public ImageDocument getImageById(@PathVariable String id){
         return this.imageService
-                .getImageById(id)
-                .map(image -> ResponseEntity.ok(image))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+                .getImageById(id).orElseThrow(() -> new RuntimeException("asdsad"));
+
     }
 
     @PostMapping(path= {"/images"})
-    public Mono<ImageDocument> processImage(
-             @RequestBody ImageProcessRequest request){
-        return imageService.processImage(request);
+    public ImageDocument processImage(
+             @RequestPart ImageProcessRequest request, @RequestPart(required = false) MultipartFile processImage) throws IOException {
+
+        log.info(request.toString());
+        return imageService.processImage(request, processImage);
     }
 }

@@ -6,15 +6,18 @@ import com.example.imageobjectapi.repository.ImageRepo;
 import com.example.imageobjectapi.service.googleVision.VisionService;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -22,50 +25,38 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepo imageRepo;
     private final VisionService visionService;
     @Override
-    public Flux<ImageDocument> getAllImages() {
+    public List<ImageDocument> getAllImages() {
         return this.imageRepo.findAll();
     }
     @Override
-    public Flux<ImageDocument> getAllImagesWithObjects(String objects) {
-        return this.imageRepo.findByObjectsContainsIgnoreCase(Arrays.asList(objects.split(",")));
+    public List<ImageDocument> getAllImagesWithObjects(List<String> objects) {
+        return this.imageRepo.findByObjectsContainsIgnoreCase(objects);
     }
     @Override
-    public Mono<ImageDocument> getImageById(String id) {
+    public Optional<ImageDocument> getImageById(String id) {
         return imageRepo.findById(id);
     }
 
-//    @Override
-//    public Mono<ImageDocument> processImage(ImageProcessRequest request) {
-//
-//        AnnotateImageResponse response = visionService.analyzeImage(request.getUrl());
-//        List<String> objects = response.getLocalizedObjectAnnotationsList().stream()
-//                .map(item -> item.getName())
-//                .distinct()
-//                .collect(Collectors.toList());
-//
-//        return imageRepo.save(ImageDocument.builder()
-//                .label("label")
-//                .metadata(response.getLocalizedObjectAnnotationsList().toString())
-//                .objects(objects)
-//                        .image(request.getUrl())
-//                .build()
-//        );
-//    }
-
     @Override
-    public Mono<ImageDocument> processImage(ImageProcessRequest request) {
+    public ImageDocument processImage(ImageProcessRequest request, MultipartFile imageDocument) throws IOException {
 
-        AnnotateImageResponse response = visionService.analyzeImage(request.getUrl());
+        AnnotateImageResponse response = ObjectUtils.isEmpty(imageDocument) ?
+                visionService.analyzeImage(request.getUrl()) :
+                visionService.analyzeImage(imageDocument);
+
         List<String> objects = response.getLocalizedObjectAnnotationsList().stream()
                 .map(item -> item.getName())
                 .distinct()
                 .collect(Collectors.toList());
 
         return imageRepo.save(ImageDocument.builder()
-                .label("label")
+                .label(StringUtils.isEmpty(request.getLabel()) ?
+                        String.join("","LABEL -", RandomStringUtils.random(12, true, true)) :
+                        request.getLabel())
                 .metadata(response.getLocalizedObjectAnnotationsList().toString())
                 .objects(objects)
-                .image(request.getUrl())
+                .image(ObjectUtils.isEmpty(imageDocument)
+                        ? request.getUrl() : new String(imageDocument.getBytes(), StandardCharsets.UTF_8))
                 .build()
         );
     }

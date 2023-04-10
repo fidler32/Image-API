@@ -2,16 +2,18 @@ package com.example.imageobjectapi.service.image;
 
 import com.example.imageobjectapi.document.ImageDocument;
 import com.example.imageobjectapi.dto.request.ImageProcessRequest;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+import org.springframework.http.codec.multipart.FilePart;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 public interface ImageService {
-    Flux<ImageDocument> getAllImages();
-    Flux<ImageDocument> getAllImagesWithObjects(String objects);
+    List<ImageDocument> getAllImages();
+    List<ImageDocument> getAllImagesWithObjects(List<String> objects);
 
-    Mono<ImageDocument> getImageById(String id);
+    Optional<ImageDocument> getImageById(String id);
 
-    Mono<ImageDocument> processImage(ImageProcessRequest request);
+    ImageDocument processImage(ImageProcessRequest request, MultipartFile imageDocument) throws IOException;
 }

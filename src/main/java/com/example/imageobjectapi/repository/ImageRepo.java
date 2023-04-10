@@ -1,16 +1,14 @@
 package com.example.imageobjectapi.repository;
 
 import com.example.imageobjectapi.document.ImageDocument;
-import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface ImageRepo extends ReactiveMongoRepository<ImageDocument, String> {
-    Flux<ImageDocument> findAll();
-    Mono<ImageDocument> findById(String id);
-    Flux<ImageDocument> findByObjectsContainsIgnoreCase(List<String> objectsToFind);
+public interface ImageRepo extends MongoRepository<ImageDocument, String> {
+    Optional<ImageDocument> findById(String id);
+    List<ImageDocument> findByObjectsContainsIgnoreCase(List<String> objectsToFind);
 }
