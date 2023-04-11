@@ -36,7 +36,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/images?object=dog",
+					"raw": "http://localhost:8080/images?objects=dog",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -47,7 +47,7 @@
 					],
 					"query": [
 						{
-							"key": "object",
+							"key": "objects",
 							"value": "dog"
 						}
 					]

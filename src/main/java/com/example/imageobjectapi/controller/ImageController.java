@@ -23,7 +23,7 @@ public class ImageController {
     private final ImageService imageService;
 
     @GetMapping(path = {"/images"})
-    public List<ImageDocument> getImages(@RequestParam(value ="object", required = false) List<String> objects){
+    public List<ImageDocument> getImages(@RequestParam(value ="objects", required = false) List<String> objects){
         if(CollectionUtils.isEmpty(objects)){
             return this.imageService.getAllImages();
         }else {
