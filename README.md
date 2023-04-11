@@ -3,15 +3,16 @@ This project is set up to analyze objects with images using Google Cloud API to 
 
 ### Configuration
 
-#### MongoDB
+#### PostgresDb
 
-Must run a mongoDB instance and configure in application.properties
+Must run a Postgres instance and configure in application.properties
+To use another relational DB add new driver to build.gradle
 
-`spring.data.mongodb.host=localhost`
+`spring.datasource.url=jdbc:postgresql://localhost:5432/postgres`
+`spring.datasource.username=postgres`
+`spring.datasource.password=${POSTGRES_PASSWORD}`
 
- `spring.data.mongodb.port=27017`
 
- `spring.data.mongodb.database=imagesdb`
 #### Google Cloud Credentials 
 Must set Google Cloud Environment variables
 
