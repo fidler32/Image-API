@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface ImageRelationalRepo extends JpaRepository<ImageEntity, String> {
@@ -19,4 +20,6 @@ public interface ImageRelationalRepo extends JpaRepository<ImageEntity, String> 
             "inner join object ON image.image_id=object.object_id " +
             "where lower(name) in ?1", nativeQuery = true)
     List<ImageEntity> findImageEntitiesFromList(List<String> objects);
+
+    List<ImageEntity> findByObjectsIn(Set<ObjectEntity> objects);
 }

@@ -39,7 +39,8 @@ public class ImageServiceRelationalImpl implements ImageService {
     }
 
     public List<ImageEntity> getAllImagesWithObjects(List<String> objects) {
-        return this.imageRepo.findImageEntitiesFromList(objects.stream().map(String::toLowerCase).collect(Collectors.toList()));
+        Set<ObjectEntity> preExistingObjects = this.objectRepo.getObjectEntitiesByNameIn(objects.stream().map(String::toLowerCase).collect(Collectors.toList()));
+        return this.imageRepo.findByObjectsIn(preExistingObjects);
     }
 
     public Optional<ImageEntity> getImageById(String id) {
@@ -73,6 +74,7 @@ public class ImageServiceRelationalImpl implements ImageService {
                     .objects(preExistingObjects)
                     .image((ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() <= 0)
                             ? new byte[0] : new String(imageDocument.getBytes(), StandardCharsets.UTF_8).getBytes())
+                    .imageUrl(StringUtils.isEmpty(request.getUrl()) ? null : request.getUrl())
                     .build()
             );
         } else {
