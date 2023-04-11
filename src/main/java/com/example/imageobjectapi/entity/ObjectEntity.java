@@ -1,5 +1,6 @@
 package com.example.imageobjectapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.extern.jackson.Jacksonized;
@@ -15,6 +16,7 @@ import lombok.extern.jackson.Jacksonized;
 public class ObjectEntity {
 
     @Id
+    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(columnDefinition = "serial")
     @EqualsAndHashCode.Exclude

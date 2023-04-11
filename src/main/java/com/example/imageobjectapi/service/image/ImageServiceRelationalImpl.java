@@ -71,7 +71,7 @@ public class ImageServiceRelationalImpl implements ImageService {
                             request.getLabel())
                     .metadata(response.getLocalizedObjectAnnotationsList().toString())
                     .objects(preExistingObjects)
-                    .image(ObjectUtils.isEmpty(imageDocument)
+                    .image((ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() <= 0)
                             ? new byte[0] : new String(imageDocument.getBytes(), StandardCharsets.UTF_8).getBytes())
                     .build()
             );
@@ -81,7 +81,7 @@ public class ImageServiceRelationalImpl implements ImageService {
                             String.join("", "LABEL -", RandomStringUtils.random(12, true, true)) :
                             request.getLabel())
                             .objects(new HashSet<>())
-                    .image((ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() < 0)
+                    .image((ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() <= 0)
                             ? new byte[0] : new String(imageDocument.getBytes(), StandardCharsets.UTF_8).getBytes())
                     .imageUrl(StringUtils.isEmpty(request.getUrl()) ? null : request.getUrl())
                     .build());
