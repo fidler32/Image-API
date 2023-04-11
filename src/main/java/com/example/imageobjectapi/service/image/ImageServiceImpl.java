@@ -43,12 +43,12 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ImageDocument processImage(ImageProcessRequest request, MultipartFile imageDocument) throws IOException {
-        if(StringUtils.isEmpty(request.getUrl()) && (ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() < 0)) {
+        if(StringUtils.isEmpty(request.getUrl()) && (ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() <= 0)) {
             throw new NoImageToProcessException("No Image uploaded");
         }
 
         if(request.getProcessImageForObjects()) {
-            AnnotateImageResponse response = (ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() < 0) ?
+            AnnotateImageResponse response = (ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() <= 0) ?
                     visionService.analyzeImage(request.getUrl()) :
                     visionService.analyzeImage(imageDocument);
 
@@ -72,8 +72,8 @@ public class ImageServiceImpl implements ImageService {
                     .label(StringUtils.isEmpty(request.getLabel()) ?
                             String.join("", "LABEL -", RandomStringUtils.random(12, true, true)) :
                             request.getLabel())
-                    .image(ObjectUtils.isEmpty(imageDocument)
-                            ? request.getUrl() : new String(imageDocument.getBytes(), StandardCharsets.UTF_8))
+                    .image((ObjectUtils.isEmpty(imageDocument) || imageDocument.getSize() <= 0) ?
+                            request.getUrl() : new String(imageDocument.getBytes(), StandardCharsets.UTF_8))
                     .build());
         }
     }
