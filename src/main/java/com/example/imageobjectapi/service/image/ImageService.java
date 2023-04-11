@@ -2,7 +2,6 @@ package com.example.imageobjectapi.service.image;
 
 import com.example.imageobjectapi.document.ImageDocument;
 import com.example.imageobjectapi.dto.request.ImageProcessRequest;
-import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

@@ -16,6 +16,6 @@ public class ImageDocument {
     private String id;
     private String label;
     private List<String> objects;
-    private Object metadata;
+    private String metadata;
     private String image;
 }
