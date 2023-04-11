@@ -33,8 +33,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.vladmihalcea:hibernate-types-60:2.21.1'
     implementation 'io.hypersistence:hypersistence-utils-hibernate-60:3.3.1'
-    implementation 'org.flywaydb:flyway-core:9.16.3'
-    implementation 'org.flywaydb:flyway-maven-plugin:9.16.3'
 
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
@@ -50,12 +48,6 @@ dependencyManagement {
         mavenBom "com.google.cloud:spring-cloud-gcp-dependencies:${springCloudGcpVersion}"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
-}
-
-flyway {
-    url = 'jdbc:postgresql://localhost:5432/postgres'
-    user = 'postgres'
-    password='orange32!'
 }
 
 tasks.named('test') {

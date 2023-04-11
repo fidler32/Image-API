@@ -1,36 +1,54 @@
 package com.example.imageobjectapi.entity;
 
-import io.hypersistence.utils.hibernate.type.array.ListArrayType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.jackson.Jacksonized;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Cascade;
 
-import java.util.List;
-import java.util.UUID;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 @Entity
 @Data
 @Jacksonized
 @Builder
 @AllArgsConstructor
+@EqualsAndHashCode
 @NoArgsConstructor
-@Table(name= "images")
+@Table(name= "image")
 public class ImageEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @Column(columnDefinition = "serial")
+    private long image_id;
+
     @Column(name= "label")
     private String label;
-    @Type(ListArrayType.class)
-    @Column(name= "objects")
-    private List<String> objects;
-    @Column(name= "metadata")
+
+    @ManyToMany(
+            cascade =
+                    {
+                            CascadeType.DETACH,
+                            CascadeType.MERGE,
+                            CascadeType.REFRESH,
+                            CascadeType.PERSIST
+                    }
+    )
+    @JoinTable(name = "image_object",
+            joinColumns = @JoinColumn(
+                    name = "image_id", referencedColumnName = "image_id"
+            ),
+            inverseJoinColumns =
+            @JoinColumn(name = "object_id", referencedColumnName = "object_id"
+            )
+    )
+    private Set<ObjectEntity> objects;
+
+    @Column(name= "metadata", columnDefinition="TEXT")
     private String metadata;
-    @Column(name= "image")
-    private String image;
+    @Column(name= "image", columnDefinition="BYTEA")
+    private byte[] image;
+    @Column(name="image_url", columnDefinition = "TEXT")
+    private String imageUrl;
 }
