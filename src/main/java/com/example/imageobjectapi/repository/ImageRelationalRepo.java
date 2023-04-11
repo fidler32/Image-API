@@ -16,10 +16,5 @@ public interface ImageRelationalRepo extends JpaRepository<ImageEntity, String> 
     List<ImageEntity> findAll();
     Optional<ImageEntity> findById(String id);
 
-    @Query(value = "SELECT * from image " +
-            "inner join object ON image.image_id=object.object_id " +
-            "where lower(name) in ?1", nativeQuery = true)
-    List<ImageEntity> findImageEntitiesFromList(List<String> objects);
-
     List<ImageEntity> findByObjectsIn(Set<ObjectEntity> objects);
 }
