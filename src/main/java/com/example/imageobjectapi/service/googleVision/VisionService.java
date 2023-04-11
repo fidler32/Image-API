@@ -5,7 +5,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface VisionService {
     AnnotateImageResponse analyzeImage(MultipartFile image);
-
     AnnotateImageResponse analyzeImage(String imageUrl);
 }
 

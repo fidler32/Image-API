@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface ImageService {
     List<ImageDocument> getAllImages();
     List<ImageDocument> getAllImagesWithObjects(List<String> objects);
-
     Optional<ImageDocument> getImageById(String id);
 
     ImageDocument processImage(ImageProcessRequest request, MultipartFile imageDocument) throws IOException;
