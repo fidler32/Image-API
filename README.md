@@ -12,6 +12,9 @@ Must run a mongoDB instance and configure in application.properties
  `spring.data.mongodb.port=27017`
 
  `spring.data.mongodb.database=imagesdb`
+ 
+ For a relational DB example please checkout relationalDb branch
+ 
 #### Google Cloud Credentials 
 Must set Google Cloud Environment variables
 
